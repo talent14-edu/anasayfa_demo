@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blok Kodlama Haritası - Revize</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-yellow: #FFD700;
+            --primary-purple: #6C5CE7;
+            --primary-cyan: #00CEC9;
+            --primary-maarif: #00b894; 
+            --glass-bg: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --text-dark: #2d3436;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #a29bfe; 
+            background: url('scratch_bg.jpg') no-repeat center center/cover;
+            position: relative;
+        }
+
+        /* --- ÜST KONTROL GRUBU --- */
+        .top-navigation {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            z-index: 90;
+        }
+
+        .segmented-control {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 5px;
+            border-radius: 30px;
+            display: flex;
+            border: 2px solid var(--glass-border);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .segment-btn {
+            padding: 8px 25px;
+            border-radius: 25px;
+            border: none;
+            background: transparent;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s all ease;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px; /* İkon ve yazı arasındaki boşluk */
+        }
+
+        .segment-btn i {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .segment-btn.active {
+            background: white;
+            color: var(--primary-purple);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        /* Maarif aktifken aktif buton rengi yeşil olsun */
+        body.maarif-mode .segment-btn.active {
+            color: var(--primary-maarif);
+        }
+
+        /* Seviye Butonları */
+        .header-levels {
+            display: flex;
+            gap: 10px;
+        }
+
+        .level-circle {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--primary-cyan);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 800;
+            font-size: 0.85rem;
+            border: 3px solid white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .level-circle.active {
+            width: 55px;
+            height: 55px;
+            background: var(--primary-yellow);
+            color: var(--text-dark);
+            transform: scale(1.1);
+        }
+
+        body.maarif-mode .level-circle {
+            background: var(--primary-maarif);
+        }
+        body.maarif-mode .level-circle.active {
+            background: #55efc4; 
+        }
+
+        /* --- DİĞER PANELLER (Kısa özet) --- */
+        .sidebar {
+            position: absolute; left: 20px; top: 20px; bottom: 20px; width: 70px;
+            background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(15px);
+            border-radius: 35px; border: 2px solid var(--glass-border);
+            display: flex; flex-direction: column; align-items: center; padding: 10px 0; gap: 15px; z-index: 100;
+        }
+        .sidebar-btn {
+            width: 45px; height: 45px; border-radius: 50%; border: none;
+            background: white; color: var(--primary-purple); font-size: 1.2rem;
+            cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.3s;
+        }
+        .status-bar { position: absolute; top: 20px; right: 20px; display: flex; gap: 15px; }
+        .status-pill {
+            background: rgba(0, 0, 0, 0.5); padding: 8px 15px; border-radius: 20px;
+            color: white; font-weight: bold; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(5px);
+        }
+        .info-panel {
+            position: absolute; bottom: 20px; left: 110px;
+            background: linear-gradient(90deg, #4834d4, #686de0);
+            padding: 15px 30px; border-radius: 20px; color: white; min-width: 350px; z-index: 20;
+        }
+        .bottom-actions { position: absolute; bottom: 20px; right: 20px; display: flex; gap: 15px; }
+        .btn-school {
+            background: var(--primary-cyan); color: white; padding: 12px 25px;
+            border-radius: 25px; text-decoration: none; font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <button class="sidebar-btn"><i class="fa-solid fa-plus"></i></button>
+        <button class="sidebar-btn"><i class="fa-regular fa-compass"></i></button>
+        <button class="sidebar-btn"><i class="fa-solid fa-briefcase"></i></button>
+        <div style="flex-grow: 1;"></div>
+        <button class="sidebar-btn" style="background:var(--primary-purple); color:#fff"><i class="fa-solid fa-code"></i></button>
+    </nav>
+
+    <div class="top-navigation">
+        <div class="segmented-control">
+            <button class="segment-btn active" onclick="switchPath('bilisim', this)">
+                <i class="fa-solid fa-code"></i> Bilişim
+            </button>
+            <button class="segment-btn" onclick="switchPath('maarif', this)">
+                <i class="fa-solid fa-book-open"></i> Maarif
+            </button>
+        </div>
+
+        <div class="header-levels" id="levels-container">
+            <div class="level-circle"><i class="fa-solid fa-chevron-left"></i></div>
+            <div class="level-circle active">K-1</div>
+            <div class="level-circle">K-2</div>
+            <div class="level-circle">K-3</div>
+            <div class="level-circle">K-4</div>
+            <div class="level-circle">K-5</div>
+            <div class="level-circle">K-6</div>
+            <div class="level-circle"><i class="fa-solid fa-chevron-right"></i></div>
+        </div>
+    </div>
+
+    <div class="status-bar">
+        <div class="status-pill"><i class="fa-solid fa-brain"></i> 236</div>
+        <div class="status-pill" style="background: rgba(255, 165, 2, 0.6);"><i class="fa-solid fa-coins"></i> 159</div>
+    </div>
+
+    <div class="info-panel">
+        <h2 id="path-title">Blok Kodlama Scratch</h2>
+        <div style="font-size: 0.9rem; opacity: 0.9;">
+            Seviye: <b id="difficulty">KOLAY</b> | İlerleme: <b>0 / 33</b>
+        </div>
+    </div>
+
+    <div class="bottom-actions">
+        <a href="#" class="btn-school">Okula Git</a>
+        <div class="btn-school" style="background: var(--primary-purple); width: 50px; text-align: center; cursor:pointer;">AI</div>
+    </div>
+
+    <script>
+        function switchPath(type, btn) {
+            document.querySelectorAll('.segment-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const circles = document.querySelectorAll('.level-circle');
+            const title = document.getElementById('path-title');
+            const difficulty = document.getElementById('difficulty');
+
+            if (type === 'maarif') {
+                document.body.classList.add('maarif-mode');
+                title.innerText = "Maarif Eğitim Patikası";
+                difficulty.innerText = "KOLAY";
+                
+                circles.forEach((circle, index) => {
+                    if(index > 0 && index < circles.length - 1) {
+                        circle.innerText = "M-" + index;
+                        circle.style.transform = "rotateY(360deg)";
+                    }
+                });
+            } else {
+                document.body.classList.remove('maarif-mode');
+                title.innerText = "Blok Kodlama Scratch";
+                difficulty.innerText = "KOLAY";
+
+                circles.forEach((circle, index) => {
+                    if(index > 0 && index < circles.length - 1) {
+                        circle.innerText = "K-" + index;
+                        circle.style.transform = "rotateY(0deg)";
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
